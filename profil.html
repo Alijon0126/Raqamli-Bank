@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foydalanuvchi Profil</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="profile-container">
+        <header>
+            <h1>Foydalanuvchi Profil</h1>
+            <div class="user-info">
+                <img src="bank.jpeg" alt="Profil rasmi" class="profile-img">
+                <p class="user-name">Ismingiz</p>
+            </div>
+        </header>
+
+        <section class="balance">
+            <h2>Balans</h2>
+            <p class="balance-amount" id="balance-amount">$ 0</p>
+        </section>
+
+        <section class="services">
+            <button class="service-btn" id="make-payment-btn">To'lovlar</button>
+            <button class="service-btn">Tranzaksiya Tarixi</button>
+            <button class="service-btn">Pul O'tkazmalari</button>
+        </section>
+
+        <!-- To'lov turlari bo'limi -->
+        <section id="payment-types" class="hidden">
+            <h2>To'lovlar</h2>
+            <ul>
+                <li><button class="payment-option" data-type="education">O'qish uchun kontrakt to'lovi</button></li>
+                <li><button class="payment-option" data-type="utilities">Komunal to'lovlar</button></li>
+                <li><button class="payment-option" data-type="radar">Radar uchun to'lov</button></li>
+            </ul>
+        </section>
+
+        <footer>
+            <p>© 2025 Raqamli Bank</p>
+        </footer>
+    </div>
+
+    <!-- To'lovni amalga oshirish uchun modal oynasi -->
+    <div id="payment-modal" class="hidden">
+        <div class="modal-content">
+            <h2>To'lovni amalga oshirish</h2>
+            <label for="recipient">Qabul qiluvchi manzil:</label>
+            <input type="text" id="recipient" name="recipient" required placeholder="Manzilni kiriting">
+            <br>
+            <label for="amount">Miqdori:</label>
+            <input type="number" id="amount" name="amount" required placeholder="Miqdor kiriting">
+            <br>
+            <button id="confirm-payment">To'lovni tasdiqlash</button>
+            <button id="close-modal">Yopish</button>
+        </div>
+    </div>
+
+    <script>
+        const paymentBtn = document.getElementById('make-payment-btn');
+        const paymentTypesSection = document.getElementById('payment-types');
+        const modal = document.getElementById('payment-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const confirmPaymentBtn = document.getElementById('confirm-payment');
+
+        // To'lov turlarini ko‘rsatish
+        paymentBtn.addEventListener('click', () => {
+            paymentTypesSection.classList.toggle('hidden');
+            paymentTypesSection.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Har bir to‘lov turini bosganda modal oynani ochish
+        document.querySelectorAll('.payment-option').forEach(btn => {
+            btn.addEventListener('click', () => {
+                modal.classList.remove('hidden');
+            });
+        });
+
+        // Modalni yopish
+        closeModalBtn.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        // To'lovni yuborish
+        confirmPaymentBtn.addEventListener('click', async () => {
+            const recipient = document.getElementById('recipient').value;
+            const amount = document.getElementById('amount').value;
+
+            if (!recipient || !amount) {
+                alert("Iltimos, barcha maydonlarni to‘ldiring.");
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8000/payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ recipient, amount })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert("To'lov muvaffaqiyatli amalga oshirildi.");
+                    modal.classList.add('hidden');
+                } else {
+                    alert("Xatolik: " + result.detail);
+                }
+            } catch (error) {
+                alert("Tarmoqda xatolik: " + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

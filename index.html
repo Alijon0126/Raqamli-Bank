@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Raqamli Bank</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="background">
+    <!-- Header va navigatsiya -->
+    <header>
+      <nav>
+        <ul>
+          <li><a href="#">Bosh Sahifa</a></li>
+          <li><a href="#about" id="about-link">Biz Haqimizda</a></li>
+          <li><a href="#services" id="services-link">Xizmatlar</a></li>
+          <li><a href="#register" id="register-link">Ro'yxatdan O'tish</a></li>
+          <li><a href="#contact" id="contact-link">Aloqa</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Asosiy -->
+    <main>
+      <h1>Raqamli Bankga Xush Kelibsiz!</h1>
+      <p>Bizning xizmatlarimiz bilan tanishing va onlayn to'lovlar qilishni osonlashtiring.</p>
+      <button onclick="scrollToSection('services')">Xizmatlarimizni ko'rish</button>
+    </main>
+
+    <!-- Biz haqimizda -->
+    <section id="about" class="hidden">
+      <div class="about-container">
+        <h2>Biz Haqimizda</h2>
+        <p><strong>Raqamli Bank</strong> — zamonaviy moliyaviy xizmatlarni taqdim etuvchi innovatsion platforma bo‘lib, blokcheyn texnologiyasidan foydalanadi.</p>
+        <p><strong>Blokcheynning foydasi:</strong></p>
+        <ul>
+          <li>Tranzaksiyalar xavfsizligi va shaffofligini ta’minlaydi</li>
+          <li>Markaziy serverlarga ehtiyoj qolmaydi</li>
+          <li>Foydalanuvchilarning shaxsiy ma’lumotlari himoyalangan</li>
+          <li>To‘lovlar tez va arzon amalga oshadi</li>
+        </ul>
+        <ul>
+          <li>Bankimiz 2024-yilda tashkil topgan.</li>
+          <li>Mijozlarga raqamli qulayliklar taqdim etiladi.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Xizmatlar -->
+    <section id="services" class="hidden">
+      <div class="services-container">
+        <h2>Xizmatlar</h2>
+        <ul>
+          <li><button id="create-wallet">Hamyon Ochish</button></li>
+          <li><button id="send-transaction">Tranzaksiya Jo‘natish</button></li>
+          <li><button id="receive-transaction">Tranzaksiya Qabul Qilish</button></li>
+          <li><button id="check-balance">Balansni Tekshirish</button></li>
+          <li>Onlayn to'lovlar</li>
+          <li>Hisob raqam ochish</li>
+          <li>Kredit olish</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Ro'yxatdan o'tish -->
+    <section id="register" class="hidden">
+      <div class="register-container">
+        <h2>Ro'yxatdan O'tish</h2>
+        <form id="register-form">
+          <label for="email">Gmail:</label>
+          <input type="email" id="email" name="email" required placeholder="Gmail manzilingizni kiriting">
+          <br>
+          <label for="password">Parol:</label>
+          <input type="password" id="password" name="password" required placeholder="Parolni kiriting">
+          <br>
+          <button type="submit">Ro'yxatdan O'tish</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Aloqa -->
+    <section id="contact" class="hidden">
+      <div class="about-container">
+        <h2>Aloqa</h2>
+        <p>Email: info@raqamlibank.uz</p>
+        <p>Telefon: +998 97 881 48 88</p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>© 2025 Raqamli Bank. Barcha huquqlar himoyalangan.</p>
+    </footer>
+  </div>
+
+  <script>
+    function scrollToSection(id) {
+      const sections = ['about', 'services', 'register', 'contact'];
+      sections.forEach(sectionId => {
+        document.getElementById(sectionId).classList.add('hidden');
+      });
+      const target = document.getElementById(id);
+      target.classList.remove('hidden');
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    document.getElementById('about-link').addEventListener('click', function(e) {
+      e.preventDefault();
+      scrollToSection('about');
+    });
+
+    document.getElementById('services-link').addEventListener('click', function(e) {
+      e.preventDefault();
+      scrollToSection('services');
+    });
+
+    document.getElementById('register-link').addEventListener('click', function(e) {
+      e.preventDefault();
+      scrollToSection('register');
+    });
+
+    document.getElementById('contact-link').addEventListener('click', function(e) {
+      e.preventDefault();
+      scrollToSection('contact');
+    });
+
+    document.getElementById('register-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      if (validateEmail(email) && password.length >= 6) {
+        try {
+          const response = await fetch('http://localhost:8000/register', {
+            method: 'POST',
+            body: new URLSearchParams({ email, password }),
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          });
+
+          const data = await response.json();
+
+          if (data.message === "Ro'yxatdan o'tish muvaffaqiyatli") {
+            alert("Ro'yxatdan o'tish muvaffaqiyatli!");
+            window.location.href = 'profil.html';
+          } else {
+            alert('Xatolik yuz berdi: ' + (data.detail || 'Noma’lum xatolik'));
+          }
+        } catch (error) {
+          alert('Serverga ulanishda xatolik: ' + error.message);
+        }
+      } else {
+        alert("Iltimos, to'g'ri ma'lumot kiriting!");
+      }
+    });
+
+    function validateEmail(email) {
+      const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return re.test(email);
+    }
+  </script>
+</body>
+</html>
