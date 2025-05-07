@@ -313,3 +313,67 @@ html {
     padding-top: 80px;
     margin-top: -80px;
 }
+
+/* Mobil optimallashtirish */
+@media (max-width: 768px) {
+    /* Header menyusi */
+    nav ul {
+        text-align: center;
+        display: block;
+    }
+
+    nav ul li {
+        margin: 10px 0;
+    }
+
+    .profile-container {
+        width: 90%;
+        padding: 15px;
+    }
+
+    /* Profil rasmini kichraytirish */
+    .profile-img {
+        width: 80px;
+        height: 80px;
+    }
+
+    /* Xizmatlar bo‘limi */
+    .services {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .service-btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    /* Footer */
+    footer {
+        font-size: 12px;
+    }
+
+    /* Asosiy sahifa */
+    main {
+        margin-top: 60px;
+        padding: 20px;
+    }
+
+    main h1 {
+        font-size: 28px;
+    }
+
+    main p {
+        font-size: 16px;
+    }
+
+    /* Ro‘yxatdan o‘tish */
+    #register-container {
+        width: 90%;
+    }
+
+    /* To‘lov oynasi */
+    .modal-content {
+        width: 90%;
+    }
+}
